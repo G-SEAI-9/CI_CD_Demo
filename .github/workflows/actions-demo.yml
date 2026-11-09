@@ -10,3 +10,11 @@ jobs:
       - run: echo "Hello, World"
       - run: echo "The job was triggered by ${{ github.event_name }}"
       - run: echo "the job is running on a ${{ runner.os }}"
+
+      - name: Check out repo code
+        uses: actions/checkout@v6
+
+      - run: echo "The Repo ${{ github.repository }} was cloned into the runner"
+
+      - name: List files in repo
+        run: ls ${{ github.workspace }}
