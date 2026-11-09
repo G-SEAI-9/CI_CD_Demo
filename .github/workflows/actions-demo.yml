@@ -1,0 +1,12 @@
+name: GitHub Actions Demo
+run-name: ${{ github.actor }} testing gh actions
+
+on: [push]
+
+jobs:
+  GitHub-Action-Demo:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Hello, World"
+      - run: echo "The job was triggered by ${{ github.event_name }}"
+      - run: echo "the job is running on a ${{ runner.os }}"
