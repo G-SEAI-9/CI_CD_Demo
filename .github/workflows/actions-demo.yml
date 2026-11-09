@@ -1,20 +1,34 @@
+# Einstiegsbeispiel: Zeigt den Aufbau eines Workflows und was auf dem Runner passiert.
+# name erscheint im Actions-Tab, run-name ist der Titel des einzelnen Laufs.
 name: GitHub Actions Demo
 run-name: ${{ github.actor }} testing gh actions
 
-on: [push]
+# Startet bei jedem Push, egal auf welchem Branch.
+# workflow_dispatch: Manueller Trigger
+on: [push, workflow_dispatch]
 
+# Ein Workflow besteht aus Jobs, ein Job aus Steps.
 jobs:
   GitHub-Action-Demo:
+    # Auf dieser Art von virtueller Maschine (dem "Runner") läuft der Job.
+    # ubuntu-latest ist Standard, es gibt aber auch Windows und macOS zu höheren Kosten
     runs-on: ubuntu-latest
     steps:
+      # run führt einen Shell-Befehl auf dem Runner aus.
       - run: echo "Hello, World"
+      # GitHub ersetzt ${{ ... }} vor der Ausführung durch echte Werte,
+      # hier zum Beispiel durch das Event, das den Workflow gestartet hat.
       - run: echo "The job was triggered by ${{ github.event_name }}"
       - run: echo "the job is running on a ${{ runner.os }}"
 
+      # uses bindet eine fertige Action ein, statt alles selbst zu schreiben.
+      # actions/... sind vorgefertigte kleine Workflows von GitHub selbst.
+      # Erst nach diesem Step liegt der Code des Repos auf dem Runner.
       - name: Check out repo code
         uses: actions/checkout@v6
 
       - run: echo "The Repo ${{ github.repository }} was cloned into the runner"
 
+      # github.workspace ist der Ordner, in den der Code geklont wurde.
       - name: List files in repo
         run: ls ${{ github.workspace }}

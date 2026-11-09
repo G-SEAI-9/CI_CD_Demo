@@ -1,27 +1,45 @@
+# Continuous Integration: Jede Änderung wird automatisch getestet und gebaut,
+# damit Fehler auffallen, bevor sie in main landen.
 name: CI
 
+# Trigger: Wann soll der Workflow starten?
 on:
+  # Bei jedem Push auf main oder preview ...
   push:
     branches: [main, preview]
+  # ... und bei jedem Pull Request, also noch vor dem Merge.
   pull_request:
 
 jobs:
-  test-and-build: # unser Name
+  test-and-build: # unser Name, frei wählbar
+    # Jeder Lauf bekommt eine frische, leere virtuelle Maschine (den "Runner").
     runs-on: ubuntu-latest
+    # Die Matrix startet den Job einmal pro Wert, hier also zweimal parallel:
+    # mit der neuesten Node-LTS-Version (lts/*) und mit der davor (lts/-1).
     strategy:
       matrix:
         node-version: ['lts/*', 'lts/-1']
 
+    # Die Steps laufen der Reihe nach. Schlägt einer fehl, bricht der Job ab
+    # und der Workflow wird rot.
     steps:
+      # Der Runner ist leer, deshalb holen wir zuerst unseren Code aus dem Repo.
       - name: Checkout code
         uses: actions/checkout@v6
 
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
+          # Setzt die Version des aktuellen Matrix-Durchlaufs ein.
           node-version: ${{ matrix.node-version }}
+          # Speichert heruntergeladene npm-Pakete zwischen, das spart Zeit.
+          # Ändert sich package-lock.json, wird der Cache neu aufgebaut.
           cache: npm
 
+      # npm ci installiert exakt die Versionen aus package-lock.json,
+      # damit jeder Lauf mit denselben Paketen arbeitet.
       - run: npm ci
+      # Vitest erkennt die CI-Umgebung, läuft einmal durch und beendet sich.
       - run: npm run test
+      # Prüft die TypeScript-Typen und baut die App für die Produktion.
       - run: npm run build
