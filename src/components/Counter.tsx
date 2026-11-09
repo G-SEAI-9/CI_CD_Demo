@@ -8,7 +8,7 @@ const Counter = ({ initialValue = 0, step = 1 }: { initialValue?: number; step?:
   const reset = () => setCount(initialValue);
 
   return (
-    <div className='card bg-base-100 shadow-xl'>
+    <div className='card bg-green-600 shadow-xl'>
       <div className='card-body items-center text-center'>
         <h2 className='card-title'>Counter Component</h2>
         <div className='text-6xl font-bold text-primary mb-4'>{count}</div>
