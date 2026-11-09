@@ -1,0 +1,21 @@
+name: CI
+
+on:
+  push:
+    branches: [main, preview]
+  pull_request:
+
+jobs:
+  test-and-build: # unser Name
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: action/checkout@v5
+
+      - uses: action/setup-node@v5
+        with:
+          node-version: 26 # latest
+
+      - run: npm ci
+      - run: npm run test
+      - run: npm run build
