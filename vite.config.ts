@@ -24,5 +24,9 @@ export default defineConfig({
     environment: 'jsdom',
     // Wird vor jeder Testdatei ausgeführt (z.B. um jest-dom-Matcher zu laden)
     setupFiles: ['./src/vitest.setup.ts'],
+    coverage: {
+      provider: 'istanbul', // Istanbul JS is a test coverage tool
+      reporter: ['text', 'json', 'html'],
+    },
   },
 });
